@@ -5,38 +5,39 @@ url: "http://movb.de" # the base hostname & protocol for your site
 # THEME-SPECIFIC CONFIGURATION
 theme:
   # Meta
-  title: m(
-  avatar: tobi-quadratisch.png
+  title: Tobias Mahnke-Nissen
+  avatar: tobi-quadratisch.jpg
   gravatar: # Email MD5 hash
-  description: "Tobias Mahnke-Nissen" # used by search engines
+  description: "Private website of Tobias Mahnke-Nissen" # used by search engines
 
    # Header and footer text
-  header_text: <blockquote cite="http://www.imdb.com/title/tt0086567/">Gentlemen, I wouldn't trust this overgrown pile of microchips any further than I can throw it. -- General Beringer, WarGames</blockquote>
-  header_text_feature_image:
+  header_text: <blockquote cite="http://www.imdb.com/title/tt0086567/">Gentlemen, I wouldn't trust this overgrown pile of microchips any further than I can throw it.<footer>-- <cite>General Beringer, WarGames</cite></footer></blockquote>
+  header_text_feature_image: img/bliss.jpg
   footer_text: >
    Powered by <a href="http://jekyllrb.com">Jekyll</a> with <a href="https://rohanchandra.github.io/project/type/">Type Theme</a>
 
   # Icons
   rss: false
-  email_address: # Full email address, e.g. "sam@example.com"
+  email_address: tn@movb.de # Full email address, e.g. "sam@example.com"
   behance:
   bitbucket:
   dribbble:
   facebook:
   flickr:
-  github: "rohanchandra/type-theme"
+  github: "towbi"
   google_plus:
   instagram:
-  linkedin:  # Full URL
+  linkedin: https://de.linkedin.com/in/tobiasnissen
   pinterest:
   reddit:
   soundcloud:
   stack_exchange:  # Full URL
   steam:
   tumblr:
-  twitter: "twitter"
+  twitter:
   wordpress:
   youtube:
+  xing: "Tobias_MahnkeNissen"
 
   # Scripts
   google_analytics: # Tracking ID, e.g. "UA-000000-01"
