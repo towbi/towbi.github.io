@@ -34,9 +34,10 @@ Hier mein weltberühmtes Chili con Carne-Rezept.
 # Zubereitung
 
 Die Zwiebeln und das Fleisch (gesalzen und gepfeffert) kurz und kräftig in
-Olivenöl anbraten, dann mit dem Rest zusammen in einen Topf geben und eine
-mindestens Stunde auf niedrigster Flamme köcheln lassen (Topf nicht ganz
-geschlossen), dabei regelmäßig umrühren. Ergibt 6 Portionen.
+Olivenöl anbraten, dann mit dem Rest (Bohnen ohne Saft, Tomaten mit)
+zusammen in einen Topf geben und eine mindestens Stunde auf niedrigster
+Flamme köcheln lassen (Topf nicht ganz geschlossen), dabei regelmäßig
+umrühren. Ergibt 6 Portionen.
 
 Mit einem Klecks Crème fraîche und einem Brot servieren, am besten am
 nächsten Tag. Lecker!
