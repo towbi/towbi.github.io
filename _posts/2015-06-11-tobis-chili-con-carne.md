@@ -11,7 +11,7 @@ Hier mein weltberühmtes Chili con Carne-Rezept.
 
 ## Substanz
 
-2 Dosen | Kidney-Bohnen
+2 Dosen (2x400ml) | Kidney-Bohnen
 1 Dose (400ml) | geschälte Tomaten
 300ml | Rinderbrühe
 500g | Hackfleisch (am liebsten vom Rind, gemischt tut's aber auch)
