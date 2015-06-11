@@ -5,6 +5,8 @@ style: |
   table td:first-child { text-align: right; }
 ---
 
+Hier mein weltberühmtes Chili con Carne-Rezept.
+
 # Zutaten
 
 ## Substanz
@@ -29,7 +31,7 @@ style: |
 | Salz
 | Pfeffer
 
-## Zubereitung
+# Zubereitung
 
 Die Zwiebeln und das Fleisch (gesalzen und gepfeffert) kurz und kräftig in
 Olivenöl anbraten, dann mit dem Rest zusammen in einen Topf geben und eine
