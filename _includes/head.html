@@ -41,4 +41,10 @@
 	ga('send', 'pageview');
 	</script>
 	{% endif %}
+
+    {% if page.style %}
+      <style type="text/css">
+        {{ page.style }}
+      </style>
+    {% endif %}
 </head>
