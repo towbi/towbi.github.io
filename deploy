@@ -4,7 +4,7 @@
 if test -z "$(git status --porcelain)"; then
   jekyll build
   git push
-  scp -r _site/* movb.de:www
+  rsync -a _site/ movb.de:www
 else
   echo "Git reports unclean working copy -- can't continue."
 fi
