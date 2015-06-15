@@ -1,10 +1,10 @@
 ---
 layout: page
-title: About/Impressum
+title: About / Impressum
 hide: true
 ---
 
-<h3>Notices to: / Abmahnungen an:</h3>
+### Notices to: / Abmahnungen an:
 
 <address>
     Tobias Mahnke-Nissen<br>
