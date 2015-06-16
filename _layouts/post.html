@@ -12,6 +12,20 @@ layout: default
   <section class="post-content">{{ content }}</section>
 </article>
 
+<div class="pagination">
+  {% if page.previous %}
+    <a class="pagination_older" rel="prev" href="{{ page.previous.url }}"><span class="fa fa-long-arrow-left"></span> Previous Post</a>
+  {% else %}
+    <span class="pagination_older">No Older Posts</span>
+  {% endif %}
+  &mdash;
+  {% if page.next %}
+    <a class="pagination_newer" rel="next" href="{{ page.next.url }}">Next Post <span class="fa fa-long-arrow-right"></span></a>
+  {% else %}
+    <span class="pagination_newer">No Newer Posts</span>
+  {% endif %}
+</div>
+
 <!-- Disqus -->
 {% if site.theme.disqus_shortname %}
 <div class="comments">
