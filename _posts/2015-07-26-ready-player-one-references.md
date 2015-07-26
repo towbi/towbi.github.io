@@ -7,9 +7,9 @@ style: |
 ---
 
 Do you often find yourself in a situation where you don't know what to read,
-watch or listen to? I do. Or at least i did, until I read "Ready Player One"
+watch or listen to? I do. Or at least I did, until I read "Ready Player One"
 by Ernest Cline. The book is packed with references and allusions to novels,
-authors, films, directory, bands and songs for folks raised in the 70s, 80s
+authors, films, directors, bands and songs for folks raised in the 70s, 80s
 or 90s (and with a slight geeky touch maybe).
 
 Due to "Ready Player One" being a novel (and one of the best science fiction
@@ -53,7 +53,7 @@ enjoy!
 ## Other existing lists
 
 I began this list without checking the internet for existing lists (I was
-offline on vacation). When I finally did, I found a impressivley thorough
+offline on vacation). When I finally did, I found a impressively thorough
 list on [shmoop](http://www.shmoop.com/ready-player-one/allusions.html).
 That list, however, contains some types of pop cultural references like
 clothing, food, etc. and thus is outside the scope of the list I intended.
