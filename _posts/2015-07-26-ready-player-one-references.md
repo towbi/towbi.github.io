@@ -77,7 +77,8 @@ The _soundtrack to the book_ has been compiled over at
 
 <script>
   var options = {
-    valueNames: [ 'reference', 'tags', 'comment' ]
+    valueNames: [ 'reference', 'tags', 'comment' ],
+    page: 1000
   };
   var rpoReferences = new List('rporefs', options);
 </script>
