@@ -7,7 +7,7 @@ hide: true
 ### Notices to: / Abmahnungen an:
 
 <address>
-    Tobias Mahnke-Nissen<br>
+    Tobias König (né Mahnke-Nissen)<br>
     Stromeyerstr. 6<br>
     24116 Kiel<br>
     Germany<br>
