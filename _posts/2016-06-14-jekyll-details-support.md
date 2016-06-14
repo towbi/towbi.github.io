@@ -74,8 +74,8 @@ Jekyll will automatically recognize the plugin and it is ready to use.
 
 # Styling
 
-I added some custom SCSS to make the apperance look good in different
-browsers. Without it the basic functionality works, but the styling doesn't
+I added some custom SCSS to make the result appear good in different
+browsers. The basic functionality works without, but the styling doesn't
 really suggest what's going on.
 
 {% highlight SCSS %}
