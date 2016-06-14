@@ -6,7 +6,7 @@ keywords: "HTML5, details, summary, Jekyll, Liquid, tag, tag block"
 ---
 
 I recently stumbled upon HTML5's `details` element and wanted to use it in
-Jekyll. Here's how I did it.
+[Jekyll](https://jekyllrb.com/). Here's how I did it.
 
 # Intro
 
