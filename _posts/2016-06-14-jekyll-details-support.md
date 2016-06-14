@@ -114,7 +114,7 @@ Coming full circle, now when we write this:
 {% endraw %}
 {% endhighlight %}
 
-This is what Jekyll renders:
+This is what Jekyll (and your browser) renders:
 
 {% details Read more about that **thing**... %}
   That **thing** is...
