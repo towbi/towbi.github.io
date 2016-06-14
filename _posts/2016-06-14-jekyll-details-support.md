@@ -6,7 +6,11 @@ keywords: "HTML5, details, summary, Jekyll, Liquid, tag, tag block"
 ---
 
 I recently stumbled upon HTML5's details element and wanted to use it in
-Jekyll. I mostly write in Markdown, so I could just write plain HTML:
+Jekyll. Here's how I did it.
+
+# Intro
+
+I mostly write in Markdown, so I could just write plain HTML:
 
 {% highlight html %}
 <details>
