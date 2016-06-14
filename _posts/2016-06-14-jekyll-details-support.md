@@ -5,7 +5,7 @@ lang: en
 keywords: "HTML5, details, summary, Jekyll, Liquid, tag, tag block"
 ---
 
-I recently stumbled upon HTML5's details element and wanted to use it in
+I recently stumbled upon HTML5's `details` element and wanted to use it in
 Jekyll. Here's how I did it.
 
 # Intro
