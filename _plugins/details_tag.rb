@@ -9,12 +9,14 @@ module Jekyll
 
       def render(context)
         site = context.registers[:site]
-        converter = site.getConverterImpl(::Jekyll::Converters::Markdown)
         # as of Jekyll 3.x use this:
         # converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
-        output = converter.convert(super(context))
-        "<details><summary>#{@caption}</summary>#{output}</details>"
+        converter = site.getConverterImpl(::Jekyll::Converters::Markdown)
+        caption = converter.convert(@caption)
+        body = converter.convert(super(context))
+        "<details><summary>#{caption}</summary>#{body}</details>"
       end
+
     end
   end
 end
