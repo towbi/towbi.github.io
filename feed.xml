@@ -1,22 +1,2456 @@
----
-layout: null
----
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>{{ site.theme.title | xml_escape }}</title>
-    <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml"/>
-    <link>{{ site.url }}{{ site.baseurl }}/</link>
-    <description>{{ site.theme.description | xml_escape }}</description>
-    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
-    {% for post in site.posts limit:15 %}
+    <title>Tobias &lt;del&gt;Mahnke-Nissen&lt;/del&gt; König</title>
+    <atom:link href="http://movb.de/feed.xml" rel="self" type="application/rss+xml"/>
+    <link>http://movb.de/</link>
+    <description>Private website of Tobias Mahnke-Nissen</description>
+    <pubDate>Wed, 15 Jun 2016 18:00:59 +0200</pubDate>
+    
       <item>
-        <title>{{ post.title | xml_escape }}</title>
-        <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
-        <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
-        <description>{{ post.content | xml_escape }}</description>
-        <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
+        <title>Adding support for HTML5&#39;s details element to Jekyll</title>
+        <link>http://movb.de/jekyll-details-support.html</link>
+        <guid isPermaLink="true">http://movb.de/jekyll-details-support.html</guid>
+        <description>&lt;p&gt;I recently stumbled upon HTML5’s &lt;code&gt;details&lt;/code&gt; element and wanted to use it in
+&lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;. Here’s how I did it.&lt;/p&gt;
+
+&lt;h1 id=&quot;intro&quot;&gt;Intro&lt;/h1&gt;
+
+&lt;p&gt;I mostly write in Markdown, so I could just write plain HTML:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;details&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;summary&amp;gt;&lt;/span&gt;Read more about that **thing**...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/summary&amp;gt;&lt;/span&gt;
+  That **thing** is...
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/details&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;However, there are two reasons not to use &lt;code&gt;details&lt;/code&gt; like this:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The &lt;code&gt;details&lt;/code&gt; element is not supported by every browser, so we need some
+  kind of a fallback.&lt;/li&gt;
+  &lt;li&gt;The text in &lt;code&gt;details&lt;/code&gt; and &lt;code&gt;summary&lt;/code&gt; is not processed by Jekyll’s markup
+  converter, so the text would be rendered as is, i.e.
+  “Read more about that **thing**”, which is not what we want.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;polyfill&quot;&gt;Polyfill&lt;/h1&gt;
+
+&lt;p&gt;To address the first point, we can use a &lt;em&gt;polyfill&lt;/em&gt;. I chose
+&lt;a href=&quot;https://github.com/mathiasbynens/jquery-details&quot;&gt;jquery-details&lt;/a&gt;, which, as
+the name suggests, depends on &lt;a href=&quot;https://jquery.com/&quot;&gt;jQuery&lt;/a&gt;. Since I didn’t
+use jQuery until then, I decided to give &lt;a href=&quot;http://zeptojs.com/&quot;&gt;Zepto&lt;/a&gt; a try,
+which is basically a lightweight jQuery.&lt;/p&gt;
+
+&lt;p&gt;I included &lt;em&gt;Zepto&lt;/em&gt; and &lt;em&gt;jquery-details&lt;/em&gt; in the footer of my page like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/js/zepto.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;jQuery&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Zepto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/js/jquery.details.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;details&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;details&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The above lets &lt;em&gt;jquery-details&lt;/em&gt; run over every &lt;code&gt;details&lt;/code&gt; element it finds
+and polyfills support for it, if necessary.&lt;/p&gt;
+
+&lt;h1 id=&quot;markup-processing&quot;&gt;Markup Processing&lt;/h1&gt;
+
+&lt;p&gt;The second point can be addressed by adding a custom plugin. Jekyll uses
+&lt;a href=&quot;https://shopify.github.io/liquid/&quot;&gt;Liquid&lt;/a&gt; as templating engine. In Liquid
+you can define custom &lt;em&gt;tags&lt;/em&gt; and even
+&lt;a href=&quot;https://github.com/Shopify/liquid/wiki/Liquid-for-Programmers#create-your-own-tag-blocks&quot;&gt;tag blocks&lt;/a&gt;.
+We can create a custom &lt;em&gt;tag block&lt;/em&gt; to mimic the semantics of the &lt;code&gt;details&lt;/code&gt;
+element and use it like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-liquid&quot; data-lang=&quot;liquid&quot;&gt;{% details Read more about that **thing**... %}
+  That **thing** is...
+{% enddetails %}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;To create the new tag block, you just put the following tag block
+implementation in a &lt;em&gt;.rb&lt;/em&gt;-file in Jekyll’s plugin folder:&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/a67fda47e075d2b7fa4764bb42605063.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Jekyll will automatically recognize the plugin and it is ready to use.&lt;/p&gt;
+
+&lt;h1 id=&quot;styling&quot;&gt;Styling&lt;/h1&gt;
+
+&lt;p&gt;I added some custom SCSS to make the result appear good in different
+browsers. The basic functionality works without, but the styling doesn’t
+really suggest what’s going on.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scss&quot; data-lang=&quot;scss&quot;&gt;&lt;span class=&quot;nt&quot;&gt;details&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;summary&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;font-family&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FontAwesome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;font-size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;.2em&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;\f152&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;margin-right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;.4em&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webkit-details-marker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;none&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;margin-bottom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;.8em&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.open&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;\f150&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;result&quot;&gt;Result&lt;/h1&gt;
+
+&lt;p&gt;Coming full circle, now when we write this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-liquid&quot; data-lang=&quot;liquid&quot;&gt;{% details Read more about that **thing**... %}
+  That **thing** is...
+{% enddetails %}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This is what Jekyll (and your browser) renders:&lt;/p&gt;
+
+&lt;details&gt;&lt;summary&gt;&lt;p&gt;Read more about that &lt;strong&gt;thing&lt;/strong&gt;… &lt;/p&gt;
+&lt;/summary&gt;
+&lt;p&gt;That &lt;strong&gt;thing&lt;/strong&gt; is…&lt;/p&gt;
+&lt;/details&gt;
+
+</description>
+        <pubDate>Tue, 14 Jun 2016 00:00:00 +0200</pubDate>
       </item>
-    {% endfor %}
+    
+      <item>
+        <title>SoulPicture.de-Relaunch</title>
+        <link>http://movb.de/soulpicture.html</link>
+        <guid isPermaLink="true">http://movb.de/soulpicture.html</guid>
+        <description>&lt;p&gt;Aus gegebenem Anlass: Der Relaunch der Homepage der
+&lt;a href=&quot;http://soulpicture.de&quot;&gt;besten Fotografen aus Kiel (SoulPicture)&lt;/a&gt; ist gestern live
+gegangen.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 16 Nov 2015 00:00:00 +0100</pubDate>
+      </item>
+    
+      <item>
+        <title>“Ready Player One” References</title>
+        <link>http://movb.de/ready-player-one-references.html</link>
+        <guid isPermaLink="true">http://movb.de/ready-player-one-references.html</guid>
+        <description>&lt;p&gt;Do you often find yourself in a situation where you don’t know what to read,
+watch or listen to? I do. Or at least I did, until I read “Ready Player One”
+by Ernest Cline. The book is packed with references and allusions to novels,
+authors, films, directors, bands and songs for folks raised in the 70s, 80s
+or 90s (and with a slight geeky touch maybe).&lt;/p&gt;
+
+&lt;p&gt;Due to “Ready Player One” being a novel (and one of the best science fiction
+novels in the last years!), there is quite an amount of text around the actual
+references. I made the effort to extract every reference and allusion I could
+find and compiled the following list. The page number refers to the first page
+(in the first edition of the book) where I have found the reference.&lt;/p&gt;
+
+&lt;p&gt;If you find something wrong or missing, you can contribute by creating a Git
+pull request for your changes to the
+&lt;a href=&quot;https://github.com/towbi/towbi.github.io/blob/master/_data/ready-player-one-references.json&quot;&gt;data file&lt;/a&gt;
+that is used to generate the list below. If you don’t understand what I just
+wrote, you can also just &lt;a href=&quot;&amp;#109;&amp;#097;&amp;#105;&amp;#108;&amp;#116;&amp;#111;:&amp;#116;&amp;#110;&amp;#064;&amp;#109;&amp;#111;&amp;#118;&amp;#098;&amp;#046;&amp;#100;&amp;#101;&quot;&gt;email me&lt;/a&gt; your changes :-). Now
+enjoy!&lt;/p&gt;
+
+&lt;div id=&quot;rporefs&quot;&gt;
+  &lt;input class=&quot;search&quot; placeholder=&quot;Search for reference or tag&quot; /&gt;
+
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Page&lt;/th&gt;
+        &lt;th&gt;Reference&lt;/th&gt;
+        &lt;th&gt;Tags&lt;/th&gt;
+        &lt;th&gt;Comment&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody class=&quot;list&quot;&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;1&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ghostbusters&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;dogs and cats living together ... mass hysteria!&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;2&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Oingo Boingo – Dead Man&#39;s Party&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;2&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Space Invaders&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;3&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;John Hughes&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;3&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Heathers&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;4&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Muppet Show&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;5&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Adventure &lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;Atari 2600&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;6&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Jeff Easley Dungen Masters&#39;s Guide Painting&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Painting, RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;13&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Asteroids&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;13&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Defender&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;13&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Galaga&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;14&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Family Ties&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;14&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Robotron: 2084&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;15&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Green Lantern&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;15&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Superman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Clark Kent&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;15&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Amazing Spider-Man&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;15&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The X-Men&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;15&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Sesame Street&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;22&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Wars&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Jedi&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;22&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Cosmos&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;22&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;BurgerTime&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;22&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Donkey Kong&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;22&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Pitfall!&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;25&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Batman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Batcave&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;25&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Trek&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;26&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Last Starfighter&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;You have been recruited...&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;27&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Monty Python&#39;s Holy Grail&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;31&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Terminator 2&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;T-1000&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;36&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ferris Bueller&#39;s Day Off&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;36&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Pretty in Pink&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;36&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Sixteen Candles&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;36&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Some Kind of Wonderful&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;36&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Breakfast Club&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;36&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Weird Science&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;37&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dragon&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Magazine, RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;38&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Duran Duran – Wild Boys&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;39&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Gary Gygax&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Gygax&quot; (Planet)&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;39&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Contra&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;39&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Golden Axe&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;39&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Heavy Barrel&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;39&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ikari Warriors&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;39&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Smash TV&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;40&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Starlog Magazine&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Magazine&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;40&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Caravan of Courage&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;40&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ewoks: The Battle for Endor&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;40&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ladyhawke&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;40&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Airplane!&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;And don&#39;t call me Shirley.&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;40&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Astrosmash&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;40&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Tron: Deadly Discs&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;41&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Highlander II&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;41&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Krull&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;41&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Superman: The Movie&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;41&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Goonies&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;41&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;WarGames&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;41&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Wars: Revenge of the Jedi&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie, Poster&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;41&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Alan Parsons Project&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;43&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Swordquest: Earthworld&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;44&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Swordquest&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;44&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Swordquest: Airworld&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;44&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Swordquest: Fireworld&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;44&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Swordquest: Waterworld&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;46&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Spaced&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;48&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Fantastic Voyage&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;48&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Battlestar Galactica&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Matrix&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Anne McCaffrey&#39;s &quot;Dragonriders of Pern&quot; series&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Pern&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Douglas Adams – The Hitchhiker&#39;s Guide to the Galaxy&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Magrathea&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dune&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Arrakis&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Larry Niven – Ringworld&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Ringworld&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Lord of the Rings&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Middleearth&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Philip José Farmer&#39;s &quot;Riverworld&quot; series&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Riverworld&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Stephen King&#39;s &quot;Dark Tower&quot; series&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Mid-World&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Terry Pratchet&#39;s &quot;Discworld&quot; series&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Discworld&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Firefly&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Everquest&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;49&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;World of Warcraft&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;52&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Indiana Jones and the Last Crusade&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;53&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dungeons &amp;amp; Dragons Player&#39;s Handbook&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;RPG, Handbook&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;56&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Back to the Future Trilogy&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Alfred Bester&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Bruce Sterling&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Douglas Adams&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;J. R. R. Tolkien&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Jack Vance&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Joe Haldeman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;John Scalzi&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Kurt Vonnegut&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Michael Moorcock&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Neal Stephenson&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Neil Gaiman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Orson Scott Card&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ray Bradbury&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Richard K. Morgan&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Robert A. Heinlein&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Roger Zelazny&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Stephen King&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Terry Brooks&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Terry Pratchett&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;William Gibson&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Cameron&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Del Toro&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Fincher&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Gilliam&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Jackson&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Kevin Smith&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Kubrick&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Lucas&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Quentin Tarantino&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Steven Spielberg&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Better Off Dead&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Indiana Jones Trilogy&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Indiana Jones: Kingdom of the Crystal Skull&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Lord of the Rings Trilogy&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Mad Max Trilogy&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Real Genius&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Revenge of the Nerds&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;62&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Monty Python&#39;s Flying Circus&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;G-Force&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Gamera&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Go, Speed Racer, Go&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Godzilla&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Akalabeth&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Midnight Oil – Beds Are Burning&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Bon Jovi&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Clash&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Def Leppard&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Devo&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Journey&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Midnight Oil&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Pink Floyd&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Police&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;R.E.M.&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;They Might Be Giants&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Van Halen&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Bill Hicks&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Stand-Up Comedy&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;H.R. Pufnstuf&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Airwolf&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Knight Rider&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Misfits of Science&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Trek: Deep Space Nine&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Trek: Enterprise&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Trek: The Next Generation&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Trek: The Original Series&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Trek: Voyager&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The A-Team&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Greatest Amercian Hero&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Simpsons&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Space Giants&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;G.I. Joe&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series, Cartoon&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;He-Man&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series, Cartoon&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Land of the Lost&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series, Cartoon&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Schoolhouse Rock!&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series, Cartoon&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;63&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Thundarr the Barbarian&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series, Cartoon&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;64&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Jeopardy!&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;64&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Akalabeth&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;64&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Zaxxon&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;66&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Advanced Dungeons &amp;amp; Dragons&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;66&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Car Wars&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;66&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Champions&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;66&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dungeons &amp;amp; Dragons – Tomb of Horrors&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;66&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;GURPS&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;66&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Rolemaster&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;RPG&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;68&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Schoolhouse Rock!: Verb! You&#39;re What&#39;s Happening&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;73&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Doctor Who&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;77&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Hawk the Slayer&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;77&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Beastmaster&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;80&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Super Friends&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series, Cartoon&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;80&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Joust&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;82&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Heavy Metal&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Magazine&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;84&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dungeons &amp;amp; Dragons&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series, Cartoon&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;84&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;John Williams&#39;s Star Wars Score - The Throne Room and End Title&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Movie Score&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;85&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dungeons of Daggorath&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;87&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Mad Max 2&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Road Warrior&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;88&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Highlander&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;90&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;She-Ra&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;95&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Rain Man&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;96&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Centipede&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;96&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ms. Pac Man&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;101&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Riptide&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;102&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Footloose&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;102&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;John Cougar Mellencamp&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Artist&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;103&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Combat&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;103&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;E.T&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;103&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Kaboom&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;103&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Raiders&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;103&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Starmaster&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;103&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Empire Strikes Back&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;103&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Yars&#39; Revenge&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;104&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Rush&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;105&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Basil Oledouris: Conan the Barabarian&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Movie Score&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;105&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Bedlam&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;105&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Madness and the Minotaur&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;105&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Pyramid&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;105&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Raaka-tu&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;107&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;2010&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;107&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Richard Strauss: Also Sprach Zarathustra&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Movie Score&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;108&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Bleepers – Video Feever&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;114&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Risky Business&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;119&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Dark Crystal&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;128&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Spiderman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Peter Parker&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;135&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Phantasm Series?&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;164&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Max Headroom&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Bryce Lynch&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;174&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Romeo and Juliet&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Romeo&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;175&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Goonies&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;177&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Evil Dead Trilogy&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;177&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Fight Club&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;177&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Addams Family&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;178&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Rock Horror Picture Show&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie, Musical&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;179&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Meat Loaf&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;180&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Men Without Hats – We Can Dance If We Want To&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;180&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Simon &amp;amp; Simon&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;180&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Whiz Kids&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;181&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Buckaroo Banzai&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;182&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Neuromancer&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;183&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Duran Duran – Union of the Snake&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;183&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;New Order – Blue Monday&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;184&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Billy Idoy – Rebel Yell&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;185&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Plastic Man&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Comic Book&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;185&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Cyndi Lauper – Time After Time&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;187&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;L.A. Style – James Brown is Dead&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;189&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Blondie – Atomic&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;190&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Wham – Wake Me Up Before You Go-Go&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;195&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Buck Rogers&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;195&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Silver Spoons&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;197&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Vision Quest&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;197&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Plimsouls – A Million Miles Away&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;197&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;John Waite – Change&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Movie Score&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;199&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;They Might Be Giants – Don&#39;t Let&#39;s Start&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;200&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Falco&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Artist&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;202&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Kikaider&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;202&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Spectreman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;202&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Supaidaman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;203&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Say Anything&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;In Your Eyes&quot;, Boombox&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;203&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Peter Gabriel – In Your Eyes&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;203&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;DynaGirl&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;203&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Electra Woman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;203&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Isis&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;203&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Square Pegs&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;203&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Wonder Woman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;204&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Ultraman&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;213&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Through the Looking-Glass&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Vorpal Bastard Sword&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;216&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Star Wars&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;1983, Atari&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;217&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Def Leppard – Pour Some Sugar on Me&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;217&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Def Leppard – Hysteria&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Album&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;217&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Battlezone&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;218&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Spacewar!&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;218&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Tennis for Two&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;220&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Bryan Adams – Kids Wanna Rock&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;220&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dig Dug&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;222&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Dokken&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Band&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;222&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Buckner &amp;amp; Garcia – Pac-Man Fever&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;225&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Zork&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;226&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Colossal Cave Adventure &lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;236&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Willy Wonka &amp;amp; the Chocolate Factory&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;241&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Cowboy Bebop&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;249&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Blade Runner&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;250&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Philip K. Dick&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;252&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;John Woo&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Director&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;252&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Hard Boiled&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;252&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Killer&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;254&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Black Tiger&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;254&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Crime Fighters&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Godzilla vs. Megalon&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Jet Jaguar&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;The Iron Man&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;the Iron Giant&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Gogantor&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Johnny Sokko and His Flying Robot&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Macross&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Mazinger Z (Tranzor Z)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Mobile Suit Gundam&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;257&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Spider-Man (Supaidaman)&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;260&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Rush – 2112&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Album&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;263&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Excalibur&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;269&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Conan the Barbarian&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Crom,strong in his mountain&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;269&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Explorers&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;277&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;THX 1138&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;290&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Brazil&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&quot;Sam Lowery&quot;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;308&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Schoolhouse Rock! - 3 (Three) is a Magic Number&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;328&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;AC/DC – Dirty Deeds Done Dirt Cheap&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;330&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Brave Raideen&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;332&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Neon Genesis Evangelion&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;332&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Robotech&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;332&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Voltron: Defender of the Universe&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;333&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Short Circuit&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Movie&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;344&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Roadrunner&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;348&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Twilight Zone&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;TV Series&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;350&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;William Shakespeare&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Author&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;350&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;William Shakespeare – The Tempest&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Novel&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;350&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Gorf&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;350&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Q*Bert&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;350&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Tempest&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Video Game&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+        &lt;tr&gt;
+          &lt;td class=&quot;page&quot;&gt;351&lt;/td&gt;
+          &lt;td class=&quot;reference&quot;&gt;&lt;strong&gt;Rush – Subdivisions&lt;/strong&gt;&lt;/td&gt;
+          &lt;td class=&quot;tags&quot;&gt;Music, Song&lt;/td&gt;
+          &lt;td class=&quot;comment&quot;&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+      
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;other-existing-lists&quot;&gt;Other existing lists&lt;/h2&gt;
+
+&lt;p&gt;I began this list without checking the internet for existing lists (I was
+offline on vacation). When I finally did, I found a impressively thorough
+list on &lt;a href=&quot;http://www.shmoop.com/ready-player-one/allusions.html&quot;&gt;shmoop&lt;/a&gt;.
+That list, however, contains some types of pop cultural references like
+clothing, food, etc. and thus is outside the scope of the list I intended.
+The shmoop list has additional links, though, which is pretty helpful.&lt;/p&gt;
+
+&lt;p&gt;There are at least two lists of movies referenced in the book, one is
+&lt;a href=&quot;http://letterboxd.com/bbbgtoby/list/every-movie-referenced-in-ready-player-one/&quot;&gt;on Letterboxd&lt;/a&gt;
+and one is
+&lt;a href=&quot;http://www.imdb.com/list/ls075756472/&quot;&gt;on IMDb&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;em&gt;soundtrack to the book&lt;/em&gt; has been compiled over at
+&lt;a href=&quot;http://castleanorak.com/ready-player-one-soundtrack/&quot;&gt;Castle Anorak&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;improvements&quot;&gt;Improvements&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Links to IMDb, Wikipedia, etc. for each item&lt;/li&gt;
+  &lt;li&gt;Page numbers are OK, but an additional reference using the
+&lt;em&gt;chapter.paragraph&lt;/em&gt; notation the shmoop list uses would be great too&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script src=&quot;/js/list.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  var options = {
+    valueNames: [ &#39;reference&#39;, &#39;tags&#39;, &#39;comment&#39; ],
+    page: 1000
+  };
+  var rpoReferences = new List(&#39;rporefs&#39;, options);
+&lt;/script&gt;
+
+</description>
+        <pubDate>Sun, 26 Jul 2015 00:00:00 +0200</pubDate>
+      </item>
+    
+      <item>
+        <title>Klassisches Chili con Carne</title>
+        <link>http://movb.de/klassisches-chili-con-carne.html</link>
+        <guid isPermaLink="true">http://movb.de/klassisches-chili-con-carne.html</guid>
+        <description>&lt;p&gt;Auf meiner Suche nach einem archetypischen texanischem Chili con Carne-Rezept
+führte kein Weg an
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Everette_Lee_DeGolyer&quot;&gt;Everette Lee DeGolyers&lt;/a&gt;
+Variante vorbei. Die früheste Reproduktion seines Rezepts konnte ich in „A Taste
+of Texas“ finden, 1949 herausgegeben von Jane Trahey. Das Rezept wurde
+außerdem im Jahr 1950 in zahlreichen Zeitungen der
+&lt;a href=&quot;https://en.wikipedia.org/wiki/National_Editorial_Association&quot;&gt;NEA&lt;/a&gt;
+abgedruckt, um den Lesern in anderen nordamerikanischen Staaten &lt;em&gt;das&lt;/em&gt;
+texanische Nationalgericht näherzubringen. Bis heute findet sich das Rezept
+in so gut wie jeder Chili-Rezeptsammlung.&lt;/p&gt;
+
+&lt;p&gt;Im Gegensatz zu anderen, gerade moderneren Variationen besticht das Rezept
+durch seine verhältnismäßig geringe Anzahl an Zutaten und setzt den
+Fokus auf den Chili- und Fleischgeschmack.&lt;/p&gt;
+
+&lt;p&gt;Das Rezept gliedert sich grob in 2 Teile: 1. Zubereitung einer Chili-Paste
+und 2. Würzen und Zubereitung des Fleisches. Die Chili-Paste kann auch an
+einem anderen Tag hergestellt werden.&lt;/p&gt;
+
+&lt;p&gt;Das Rezept ergibt ein Chili, das etwa der Konsistenz von Hackfleisch
+entspricht und sich mehrere Tage im Kühlschrank hält. Zum Verzehr wird das
+Chili mit etwas Wasser erhitzt und auf gekochten Bohnen serviert.&lt;/p&gt;
+
+&lt;h1 id=&quot;zutaten&quot;&gt;Zutaten&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;6-12&lt;/td&gt;
+      &lt;td&gt;getrocknete Chilischoten&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3-6 Tassen&lt;/td&gt;
+      &lt;td&gt;kaltes Wasser&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;900 g&lt;/td&gt;
+      &lt;td&gt;Rinder-Oberschale (Steak)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;450 g&lt;/td&gt;
+      &lt;td&gt;Schweine-Oberschale (frischer Schinken)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;½ - 2 ½ Tassen&lt;/td&gt;
+      &lt;td&gt;Rindernierenfett&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4 Zehen&lt;/td&gt;
+      &lt;td&gt;Knoblauch (gewürfelt)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Zwiebeln (gewürfelt)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 TL&lt;/td&gt;
+      &lt;td&gt;Kreuzkümmel&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 TL&lt;/td&gt;
+      &lt;td&gt;Oregano&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 TL&lt;/td&gt;
+      &lt;td&gt;Salz&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h1 id=&quot;zubereitung&quot;&gt;Zubereitung&lt;/h1&gt;
+
+&lt;h2 id=&quot;chili-paste&quot;&gt;Chili-Paste&lt;/h2&gt;
+
+&lt;p&gt;Mit den folgenden Schritten wird etwa eine ½ bis ¾ Tasse Chili-Paste hergestellt:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Chilischoten waschen und Stiele und Kerne entfernen&lt;/li&gt;
+  &lt;li&gt;Schoten in einem Topf mit 2-4 Tassen kaltem Wasser zum Kochen bringen und ca. 45 bis 60 min kochen, bis sich die Haut leicht vom Fruchtfleisch löst&lt;/li&gt;
+  &lt;li&gt;Die aufgeweichten Schoten durch ein Sieb geben, um eine gleichmäßige Paste herzustellen&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Alternativ kann die Chili-Paste durch Chili-Pulver (Cayenne Pfeffer) im Verhältnis 1 TL Pulver pro Chilischote ersetzt werden, geschmacklich ist das aber natürlich nicht so delikat.&lt;/p&gt;
+
+&lt;h2 id=&quot;fleisch&quot;&gt;Fleisch&lt;/h2&gt;
+
+&lt;p&gt;Im Folgenden wird das Fleisch zusammen mit den Zwiebeln und dem Knoblauch gegart und dann mit der hergestellten Chili-Paste vermischt und zum finalen Chili reduziert.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Das Steak und den Schinken in ca. 1 cm (oder weniger) große Würfel schneiden&lt;/li&gt;
+  &lt;li&gt;Zwiebeln und Knoblauch im Fett glasig sautieren und das Fleisch hinzugeben und braten bis es durchgängig grau (nicht braun!) ist&lt;/li&gt;
+  &lt;li&gt;2 Tassen Wasser hinzugeben und bei niedriger Temperatur eine Stunde köcheln lassen&lt;/li&gt;
+  &lt;li&gt;Kreuzkümmel, Oregano, Salz und Chili-Paste hinzugeben und eine weitere Stunde köcheln lassen&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Fertig!&lt;/p&gt;
+
+&lt;p&gt;Der Geschmack entwickelt sich in den nächsten Tagen noch, nach Möglichkeit sollte das
+Chili nicht an dem Tag gegessen werden, an dem es zubereitet wurde.&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 14 Jun 2015 00:00:00 +0200</pubDate>
+      </item>
+    
+      <item>
+        <title>Tobis Chili con Carne</title>
+        <link>http://movb.de/tobis-chili-con-carne.html</link>
+        <guid isPermaLink="true">http://movb.de/tobis-chili-con-carne.html</guid>
+        <description>&lt;p&gt;Hier mein weltberühmtes Chili con Carne-Rezept.&lt;/p&gt;
+
+&lt;h1 id=&quot;zutaten&quot;&gt;Zutaten&lt;/h1&gt;
+
+&lt;h2 id=&quot;substanz&quot;&gt;Substanz&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3 Dosen (3x400g)&lt;/td&gt;
+      &lt;td&gt;Kidney-Bohnen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2 Dosen (2x400g)&lt;/td&gt;
+      &lt;td&gt;geschälte Tomaten&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;300ml&lt;/td&gt;
+      &lt;td&gt;Rinderbrühe&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;500g&lt;/td&gt;
+      &lt;td&gt;Hackfleisch (am liebsten vom Rind, gemischt tut’s aber auch)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2 Zehen&lt;/td&gt;
+      &lt;td&gt;Knoblauch&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;rote Paprika&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Zwiebeln&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2-4&lt;/td&gt;
+      &lt;td&gt;sehr scharfe kleine Chili-Schoten mit Kernen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;doppelter Espresso&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;gewrze&quot;&gt;Gewürze&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 TL&lt;/td&gt;
+      &lt;td&gt;Oregano&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 TL&lt;/td&gt;
+      &lt;td&gt;Thymian&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1/4 TL&lt;/td&gt;
+      &lt;td&gt;Zimt&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 TL&lt;/td&gt;
+      &lt;td&gt;Kreuzkümmel (Cumin)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;Salz&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;Pfeffer&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h1 id=&quot;zubereitung&quot;&gt;Zubereitung&lt;/h1&gt;
+
+&lt;p&gt;Die Zwiebeln und das Fleisch (gesalzen und gepfeffert) kurz und kräftig in
+Olivenöl anbraten, dann mit dem Rest (Bohnen ohne Saft, Tomaten mit)
+zusammen in einen Topf geben und mindestens eine Stunde auf niedrigster
+Flamme köcheln lassen (Topf nicht ganz geschlossen), dabei regelmäßig
+umrühren. Ergibt 6 Portionen.&lt;/p&gt;
+
+&lt;p&gt;Mit einem Klecks Crème fraîche und einem Brot servieren, am besten am
+nächsten Tag. Lecker!&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 11 Jun 2015 00:00:00 +0200</pubDate>
+      </item>
+    
   </channel>
 </rss>

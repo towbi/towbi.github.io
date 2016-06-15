@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+	<meta charset="utf-8">
+	<title>Adding support for HTML5's details element to Jekyll | Tobias <del>Mahnke-Nissen</del> König</title>
+	<meta name="description" content="I recently stumbled upon HTML5’s details element and wanted to use it inJekyll. Here’s how I did it.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-Frame-Options" content="sameorigin">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="/css/main.css">
+
+	<!--Favicon-->
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+	<!-- Canonical -->
+	<link rel="canonical" href="http://movb.de/jekyll-details-support.html">
+
+	<!-- RSS -->
+	<link rel="alternate" type="application/atom+xml" title="Tobias <del>Mahnke-Nissen</del> König" href="http://movb.de/feed.xml" />
+
+	<!-- Font Awesome -->
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- Google Fonts -->
+	
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic" rel="stylesheet" type="text/css">
+	
+
+	<!-- KaTeX -->
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
+	
+
+	<!-- Google Analytics -->
+	
+
+    
+</head>
+
+  <body>
+    <header class="site-header">
+	<div class="branding">
+		
+		<a href="/">
+			<img class="avatar" src="/img/tobi-quadratisch.jpg" alt=""/>
+		</a>
+		
+		<h1 class="site-title">
+			<a href="/">Tobias <del>Mahnke-Nissen</del> König</a>
+		</h1>
+	</div>
+	<nav class="site-nav">
+		<ul>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- Social icons from Font Awesome, if enabled -->
+			
+
+
+<li>
+	<a href="mailto:tn@movb.de" title="Email">
+		<i class="fa fa-fw fa-envelope"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/towbi" title="Follow on GitHub">
+		<i class="fa fa-fw fa-github"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+<li>
+	<a href="https://de.linkedin.com/in/tobiasnissen" title="Follow on LinkedIn">
+		<i class="fa fa-fw fa-linkedin"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://www.xing.com/profile/Tobias_MahnkeNissen" title="Follow on Xing">
+		<i class="fa fa-fw fa-xing"></i>
+	</a>
+</li>
+
+
+		</ul>
+	</nav>
+</header>
+
+    <div class="content">
+      <article >
+  <header style="background-image: url('/')">
+    <h1 class="title">Adding support for HTML5's details element to Jekyll</h1>
+    <p class="meta">
+    June 14, 2016
+    
+    </p>
+  </header>
+  <section class="post-content"><p>I recently stumbled upon HTML5’s <code>details</code> element and wanted to use it in
+<a href="https://jekyllrb.com/">Jekyll</a>. Here’s how I did it.</p>
+
+<h1 id="intro">Intro</h1>
+
+<p>I mostly write in Markdown, so I could just write plain HTML:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;details&gt;</span>
+  <span class="nt">&lt;summary&gt;</span>Read more about that **thing**...<span class="nt">&lt;/summary&gt;</span>
+  That **thing** is...
+<span class="nt">&lt;/details&gt;</span></code></pre></div>
+
+<p>However, there are two reasons not to use <code>details</code> like this:</p>
+
+<ol>
+  <li>The <code>details</code> element is not supported by every browser, so we need some
+  kind of a fallback.</li>
+  <li>The text in <code>details</code> and <code>summary</code> is not processed by Jekyll’s markup
+  converter, so the text would be rendered as is, i.e.
+  “Read more about that **thing**”, which is not what we want.</li>
+</ol>
+
+<h1 id="polyfill">Polyfill</h1>
+
+<p>To address the first point, we can use a <em>polyfill</em>. I chose
+<a href="https://github.com/mathiasbynens/jquery-details">jquery-details</a>, which, as
+the name suggests, depends on <a href="https://jquery.com/">jQuery</a>. Since I didn’t
+use jQuery until then, I decided to give <a href="http://zeptojs.com/">Zepto</a> a try,
+which is basically a lightweight jQuery.</p>
+
+<p>I included <em>Zepto</em> and <em>jquery-details</em> in the footer of my page like this:</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/js/zepto.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span><span class="nx">jQuery</span> <span class="o">=</span> <span class="nx">Zepto</span><span class="p">;</span><span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/js/jquery.details.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span><span class="nx">$</span><span class="p">(</span><span class="s1">'details'</span><span class="p">).</span><span class="nx">details</span><span class="p">();</span><span class="nt">&lt;/script&gt;</span></code></pre></div>
+
+<p>The above lets <em>jquery-details</em> run over every <code>details</code> element it finds
+and polyfills support for it, if necessary.</p>
+
+<h1 id="markup-processing">Markup Processing</h1>
+
+<p>The second point can be addressed by adding a custom plugin. Jekyll uses
+<a href="https://shopify.github.io/liquid/">Liquid</a> as templating engine. In Liquid
+you can define custom <em>tags</em> and even
+<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Programmers#create-your-own-tag-blocks">tag blocks</a>.
+We can create a custom <em>tag block</em> to mimic the semantics of the <code>details</code>
+element and use it like this:</p>
+
+<div class="highlight"><pre><code class="language-liquid" data-lang="liquid">{% details Read more about that **thing**... %}
+  That **thing** is...
+{% enddetails %}</code></pre></div>
+
+<p>To create the new tag block, you just put the following tag block
+implementation in a <em>.rb</em>-file in Jekyll’s plugin folder:</p>
+
+<script src="https://gist.github.com/a67fda47e075d2b7fa4764bb42605063.js"> </script>
+
+<p>Jekyll will automatically recognize the plugin and it is ready to use.</p>
+
+<h1 id="styling">Styling</h1>
+
+<p>I added some custom SCSS to make the result appear good in different
+browsers. The basic functionality works without, but the styling doesn’t
+really suggest what’s going on.</p>
+
+<div class="highlight"><pre><code class="language-scss" data-lang="scss"><span class="nt">details</span> <span class="p">{</span>
+    <span class="nt">summary</span> <span class="p">{</span>
+        <span class="err">&amp;</span><span class="p">:</span><span class="o">:</span><span class="n">before</span> <span class="p">{</span>
+            <span class="nl">font-family</span><span class="p">:</span> <span class="n">FontAwesome</span><span class="p">;</span>
+            <span class="nl">font-size</span><span class="p">:</span> <span class="m">1</span><span class="mi">.2em</span><span class="p">;</span>
+            <span class="nl">content</span><span class="p">:</span> <span class="s2">"\f152"</span><span class="p">;</span>
+            <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+            <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="mi">.4em</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="err">&amp;</span><span class="p">:</span><span class="o">:-</span><span class="n">webkit-details-marker</span> <span class="p">{</span>
+            <span class="nl">display</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nl">margin-bottom</span><span class="p">:</span> <span class="m">0</span><span class="mi">.8em</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">&amp;</span><span class="nc">.open</span><span class="o">,</span> <span class="k">&amp;</span><span class="o">[</span><span class="nt">open</span><span class="o">]</span> <span class="p">{</span>
+        <span class="na">summary</span><span class="p">:</span><span class="o">:</span><span class="n">before</span> <span class="p">{</span>
+            <span class="nl">content</span><span class="p">:</span> <span class="s2">"\f150"</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nl">color</span><span class="p">:</span> <span class="n">grey</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<h1 id="result">Result</h1>
+
+<p>Coming full circle, now when we write this:</p>
+
+<div class="highlight"><pre><code class="language-liquid" data-lang="liquid">{% details Read more about that **thing**... %}
+  That **thing** is...
+{% enddetails %}</code></pre></div>
+
+<p>This is what Jekyll (and your browser) renders:</p>
+
+<details><summary><p>Read more about that <strong>thing</strong>… </p>
+</summary>
+<p>That <strong>thing</strong> is…</p>
+</details>
+
+</section>
+</article>
+
+<!-- Post navigation -->
+
+<div id="post-nav">
+    
+    <a id="prev-post" href="/soulpicture.html">
+      <span class="page-title">SoulPicture.de-Relaunch</span>
+      <span class="nav-label">
+        <i class="fa fa-chevron-left"></i> Prev
+      </span>
+    </a>
+    
+    
+</div>
+
+
+<!-- Disqus -->
+
+
+    </div>
+    <script src="/js/zepto.min.js"></script>
+<script>jQuery = Zepto;</script>
+<script src="/js/jquery.details.min.js"></script>
+<script>$('details').details();</script>
+
+
+<script src="/js/katex_init.js"></script>
+
+
+
+<footer class="site-footer">
+	<p class="text">Copyright &copy; 2015-2016 Tobias König &mdash; <a href="/about">About / Impressum</a></p>
+</footer>
+
+
+  </body>
+</html>
