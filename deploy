@@ -1,26 +1,38 @@
 #!/bin/sh
 
-set -veux
+set -eu
 
 if test -z "$(git status --porcelain)"; then
+
+    # regenerate site
+
+    echo Regenerating site with Jekyll...
     jekyll build
 
     # update movb.de
+
+    echo Rsyncing with movb.de...
     rsync -a --delete _site/ movb.de:www
 
-    # save generated site
+    # check in generated files and push to github to update user page
+
+    echo "Updating master (branch)..."
+
     build_temp=$(mktemp -d)
     cp -ar _site/* $build_temp
 
-    # check in generated files and push to github to update user page
     git checkout master
     find . -type f ! -path "./.git/*" -delete
     cp -ar $build_temp/* .
     git add .
     git commit -m "updated site using current build in branch 'source'"
+
+    echo Pushing to GitHub...
+
     git push --all
 
-    # go back to branch source and clear temp dir
+    # go back to source branch and clear temp dir
+
     git checkout source
     rm -rf $build_temp
 else
