@@ -5,7 +5,7 @@
     <atom:link href="http://movb.de/feed.xml" rel="self" type="application/rss+xml"/>
     <link>http://movb.de/</link>
     <description>Private website of Tobias Mahnke-Nissen</description>
-    <pubDate>Wed, 15 Jun 2016 18:39:32 +0200</pubDate>
+    <pubDate>Wed, 15 Jun 2016 18:46:46 +0200</pubDate>
     
       <item>
         <title>Adding support for HTML5&#39;s details element to Jekyll</title>
