@@ -60,11 +60,9 @@ corporate secrets due to insufficient security measures, hence making the case
 for a hardened CMS installation.
 
 There are a lot of tools and plugins for any given CMS that will promise to
-enhance security. But as is also the case with anti virus software, adding
+enhance security. But as is also often the case with anti virus software, adding
 more software to an already complex system is not going to simply increase
 security, it will also increase the attack surface for the malware of crackers.
 There might be notable exceptions, but many *security plugins* will deluge
 the user with *security notifications", giving him the feeling that the plugin
 is taking care of things.
-
-
