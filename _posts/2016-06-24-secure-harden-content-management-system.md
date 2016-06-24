@@ -62,8 +62,8 @@ enhance security. But as is also often the case with anti virus software, adding
 more software to an already complex system is not going to simply increase
 security, it will also increase the attack surface for the malware of crackers.
 There might be notable exceptions, but many *security plugins* will deluge
-the user with *security notifications", giving her or him the feeling that the
-plugin is taking care of things.
+the user with *security notifications*, giving her or him the wrong feeling that
+the plugin is taking care of things.
 
 While a security hardened CMS installation is in the companies' best interest,
 increased maintenance cost is not. As with most things, this is a trade off.
