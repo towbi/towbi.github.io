@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Securing/Hardening a CMS (content management systems)'
+title: 'Securing/Hardening CMS (content management systems)'
 lang: en
 keywords: "securing, security, hardening, cms, content management, content management system"
 ---
