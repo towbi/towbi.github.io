@@ -5,10 +5,10 @@
     <atom:link href="http://movb.de/feed.xml" rel="self" type="application/rss+xml"/>
     <link>http://movb.de/</link>
     <description>Private website of Tobias Mahnke-Nissen</description>
-    <pubDate>Fri, 24 Jun 2016 22:32:45 +0200</pubDate>
+    <pubDate>Fri, 24 Jun 2016 22:33:56 +0200</pubDate>
     
       <item>
-        <title>Securing/Hardening a CMS (content management systems)</title>
+        <title>Securing/Hardening CMS (content management systems)</title>
         <link>http://movb.de/secure-harden-content-management-system.html</link>
         <guid isPermaLink="true">http://movb.de/secure-harden-content-management-system.html</guid>
         <description>&lt;p&gt;This post lists some measures that can be taken to secure/harden a CMS
