@@ -5,7 +5,7 @@
     <atom:link href="http://movb.de/feed.xml" rel="self" type="application/rss+xml"/>
     <link>http://movb.de/</link>
     <description>Private website of Tobias Mahnke-Nissen</description>
-    <pubDate>Fri, 24 Jun 2016 22:33:56 +0200</pubDate>
+    <pubDate>Fri, 24 Jun 2016 22:37:52 +0200</pubDate>
     
       <item>
         <title>Securing/Hardening CMS (content management systems)</title>
@@ -70,8 +70,8 @@ enhance security. But as is also often the case with anti virus software, adding
 more software to an already complex system is not going to simply increase
 security, it will also increase the attack surface for the malware of crackers.
 There might be notable exceptions, but many &lt;em&gt;security plugins&lt;/em&gt; will deluge
-the user with *security notifications”, giving her or him the feeling that the
-plugin is taking care of things.&lt;/p&gt;
+the user with &lt;em&gt;security notifications&lt;/em&gt;, giving her or him the wrong feeling that
+the plugin is taking care of things.&lt;/p&gt;
 
 &lt;p&gt;While a security hardened CMS installation is in the companies’ best interest,
 increased maintenance cost is not. As with most things, this is a trade off.
