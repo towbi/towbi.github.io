@@ -8,6 +8,7 @@ email: tn@movb.de
 plugins:
   - jekyll-sitemap
   - jekyll-gist
+  - jekyll-paginate
 
 # THEME-SPECIFIC CONFIGURATION
 theme_settings:
@@ -76,4 +77,3 @@ highlighter: rouge
 sass:
   sass_dir: _sass
   style: :compressed
-gems: [jekyll-paginate]
