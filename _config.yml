@@ -1,10 +1,13 @@
 # SITE CONFIGURATION
+title: "Tobias König (né Mahnke-Nissen)"
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://movb.de" # the base hostname & protocol for your site
 permalink: none
+email: tn@movb.de
 
-gems:
+plugins:
   - jekyll-sitemap
+  - jekyll-gist
 
 # THEME-SPECIFIC CONFIGURATION
 theme:
