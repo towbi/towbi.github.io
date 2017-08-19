@@ -1,6 +1,5 @@
-source "https://rubygems.org" do
+source "https://rubygems.org"
 gem 'rouge'
 gem 'jekyll'
 gem 'jekyll-paginate'
 gem 'jekyll-gist'
-end

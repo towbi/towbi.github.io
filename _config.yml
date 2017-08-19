@@ -10,7 +10,7 @@ plugins:
   - jekyll-gist
 
 # THEME-SPECIFIC CONFIGURATION
-theme:
+theme_settings:
   # Meta
   title: Tobias <del>Mahnke-Nissen</del> König
   avatar: tobi-quadratisch.jpg
@@ -20,7 +20,7 @@ theme:
    # Header and footer text
   header_text: <blockquote cite="http://www.imdb.com/title/tt0086567/">Gentlemen, I wouldn't trust this overgrown pile of microchips any further than I can throw it.<footer>-- <cite>General Beringer, WarGames</cite></footer></blockquote>
   header_text_feature_image: img/bliss.jpg
-  footer_text: Copyright &copy; 2015-2016 Tobias König &mdash; <a href="/about">About / Impressum</a>
+  footer_text: Copyright &copy; 2015-2017 Tobias König &mdash; <a href="/about">About / Impressum</a>
 
   # Icons
   rss: false
@@ -48,6 +48,7 @@ theme:
   # Scripts
   google_analytics: # Tracking ID, e.g. "UA-000000-01"
   disqus_shortname:
+  muut_community_name: # From muut.com settings, e.g. "muttcommunityname"
   katex: true # Enable if using math markup
 
   # Localization strings
