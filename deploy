@@ -14,8 +14,6 @@ if test -z "$(git status --porcelain)"; then
     echo Rsyncing with movb.de...
     rsync -a --delete _site/ movb.de:www
 
-    rm -rf $build_temp
-
 else
     echo "Git reports unclean working copy -- can't continue."
 fi
