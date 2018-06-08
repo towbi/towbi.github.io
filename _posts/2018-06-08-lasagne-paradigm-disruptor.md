@@ -36,7 +36,7 @@ For the bolognese sauce:
 
 # Preparation
 
-Prepare the bechamel and the bolognese sauce, preheat your oven to 190°C and layer the sauces and lasagna sheets evenly.
+Prepare the bechamel and the bolognese sauce, preheat your oven to 190°C and layer the sauces and lasagna sheets evenly in a casserole.
 
 The last layer must be a sauce layer (bechamel or bolognese doesn't matter) and is topped with the mozzarella.
 
