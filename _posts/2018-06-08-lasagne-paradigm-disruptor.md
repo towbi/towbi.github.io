@@ -19,24 +19,24 @@ For the bechamel sauce:
 500 ml | vegetable stock
 500 ml | milk
 2 ts | parslay
-½ ts | nutmeg
+Â½ ts | nutmeg
 
 
 For the bolognese sauce:
 
 265 g | onions
 750 g | minced meat
-900 g | puréed & diced tomatoes (half and half)
+900 g | purÃ©ed & diced tomatoes (half and half)
 18g | garlic
 1 ts | basil
 1 ts | oregano
 1 ts | paprika
-½ ts | pepper
+Â½ ts | pepper
 1 ts | salt
 
 # Preparation
 
-Prepare the bechamel and the bolognese sauce, preheat your oven to 190°C and layer the sauces and lasagna sheets evenly.
+Prepare the bechamel and the bolognese sauce, preheat your oven to 190Â°C and layer the sauces and lasagna sheets evenly.
 
 The last layer must be a sauce layer (bechamel or bolognese doesn't matter) and is topped with the mozzarella.
 
