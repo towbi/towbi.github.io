@@ -1,11 +1,11 @@
 ---
 layout: post
-title: Type 5 UUIDs using SHA-256
+title: Name-based (hashing) UUIDs using SHA-256 in Java
 lang: en
-keywords: "UUID, type 5, name, namespace, namespaced, hash, SHA, SHA-256"
+keywords: "Java, UUID, 5, 3, name-based, name, namespace, namespaced, hash, hashing, SHA, SHA-256"
 ---
 
-RFC 4122 requires the use of MD5 oder SHA-1 to generate type 5 UUIDs, prefering SHA-1 when possible. Since the standard has not been updated since more than a decade, more robust hash functions are not included in the standard. SHA-256 for example has a better resistance against preimage and collision attacks than SHA-1 and should retain these properties even after truncation. For that reason I developed the following class using SHA-256 to create the message digest needed when creating the type 5 UUID.
+RFC 4122 requires the use of MD5 oder SHA-1 to generate name-based UUIDs, prefering SHA-1 when possible. Since the standard has not been updated since more than a decade, more robust hash functions are not included in the standard. SHA-256 for example has a better resistance against preimage and collision attacks than SHA-1 and should retain these properties even after truncation. For that reason I developed the following class using SHA-256 to create the message digest, instead of MD5 or SHA-1.
 
 {% highlight java %}
 import java.security.MessageDigest;
@@ -15,23 +15,18 @@ import java.util.Objects;
 import java.util.UUID;
  
 /**
- * Class to create type 5 UUIDs.
- * <p>Disclaimer: RFC 4122 requires the use of MD5 oder SHA-1 to generate type 5 UUIDs, prefering SHA-1 when possible.
- * Since the standard has not been updated since more than a decade, more robust hash functions are not included in the
- * standard. SHA-256 for example has a better resistance against preimage and collision attacks than SHA-1 and should
- * retain these properties even after truncation. For that reason this class uses SHA-256 to create the message digest
- * needed when creating the type 5 UUID.</p>
+ * Class to create name-based UUIDs using SHA-256 as hashing function.
  * <p>A lot of code in here is taken from {@link UUID}.</p>
  */
-public class UUIDType5Sha256 {
+public class UUIDSha256 {
  
     /**
-     * Static factory to retrieve a type 5 {@link UUID} based on
+     * Static factory to retrieve a name-based (hashing) {@link UUID} based on
      * the specified namespace and name.
      * <p>This method corresponds to {@link UUID#nameUUIDFromBytes(byte[])}</p>
      *
-     * @param namespace A namespace for the type 5 UUID
-     * @param name A byte array for the type 5 UUID
+     * @param namespace namespace for the UUID
+     * @param name byte array
      * @return A {@link UUID} generated from the specified namespace and name
      */
     public static UUID nameUUIDFromNamespaceAndBytes(UUID namespace, byte[] name) {
