@@ -39,7 +39,7 @@ stages must be named as described, however.
 # This script performs a merge of the current branch in the upper branch
 # (without fast forwarding).
 #
-# Author: Tobias König <koenig@fundsaccess.com>
+# Author: Tobias König <tn@movb.de>
  
 set -eu
  
